@@ -329,7 +329,10 @@ class AbemaTVIE(AbemaTVBaseIE):
             info['episode'] = breadcrumb[-1]
             if not title:
                 title = info['episode']
-
+        
+        thumbnail = self._html_search_regex((r'og:image"\scontent="(.*?)\?height='), 
+                                            webpage, 'thumbnail', default=None, group=1)
+        
         description = self._html_search_regex(
             (r'<p\s+class="com-video-EpisodeDetailsBlock__content"><span\s+class=".+?">(.+?)</span></p><div',
              r'<span\s+class=".+?SlotSummary.+?">(.+?)</span></div><div'),
@@ -412,6 +415,7 @@ class AbemaTVIE(AbemaTVBaseIE):
         info.update({
             'id': video_id,
             'title': title,
+            'thumbnails': [{'url': thumbnail}],
             'description': description,
             'formats': formats,
             'is_live': is_live,
